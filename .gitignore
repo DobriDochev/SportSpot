@@ -1,4 +1,16 @@
 .gradle/
-build/
+**/build/
 out/
 *.class
+*.log
+hs_err_pid*
+replay_pid*
+
+# Eclipse
+bin/
+.classpath
+.project
+.settings/
+
+# IntelliJ IDEA
+*.iml
