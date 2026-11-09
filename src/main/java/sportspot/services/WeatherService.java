@@ -9,28 +9,28 @@ import java.util.List;
 @Service
 public class WeatherService {
 
-    private static final String API_KEY = "ec02bdd102167057d6426c8ccffcc4df";
+    private static final String API_KEY = System.getenv("WEATHER_API_KEY");
     private static final String BASE_URL = "https://api.openweathermap.org/data/2.5/weather";
 
     private final RestClient restClient;
 
     public WeatherService() {
-        this.restClient = RestClient.create();;
+        this.restClient = RestClient.create();
     }
 
-    public WeatherData getWeatherData(String city) {
-        OpenWeatherResponse response = restClient.get()
+    public WeatherData getWeatherData(final String city) {
+        final OpenWeatherResponse response = restClient.get()
                 .uri(BASE_URL + "?q={city}&appid={key}&units=metric", city, API_KEY)
                 .retrieve()
-                .body(OpenWeatherResponse.class); // Spring автоматично парсва JSON-а към нашия обект
+                .body(OpenWeatherResponse.class);
 
         if (response == null) {
             throw new RuntimeException("Неуспешно извличане на данните за времето");
         }
 
-        double temp = response.main().temp();
-        double windKph = response.wind().speed() * 3.6;
-        boolean isRaining = response.weather().stream().anyMatch(w -> w.main().equalsIgnoreCase("Rain"));
+        final double temp = response.main().temp();
+        final double windKph = response.wind().speed() * 3.6;
+        final boolean isRaining = response.weather().stream().anyMatch(w -> w.main().equalsIgnoreCase("Rain"));
         return new WeatherData(temp, windKph, isRaining);
     }
 
